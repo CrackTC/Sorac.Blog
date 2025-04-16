@@ -1,16 +1,9 @@
-::deep table {
-    margin-left: auto;
-    margin-right: auto;
-}
-
 ::deep th {
     background-color: var(--color-surface-3);
-    padding: 1em;
 }
 
 ::deep td {
     background-color: var(--color-surface-2);
-    padding: 1em;
 }
 
 ::deep th + th, ::deep td + td {
