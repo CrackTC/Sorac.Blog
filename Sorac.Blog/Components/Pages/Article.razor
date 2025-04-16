@@ -1,0 +1,125 @@
+﻿@page "/article/{*slug}"
+
+@using System.Web;
+@using System.Text;
+@using Markdig;
+@using Markdig.Syntax;
+@using Markdig.Syntax.Inlines;
+@using HtmlRenderer = Markdig.Renderers.HtmlRenderer;
+
+@inject BlogDbContext context
+@inject IOptions<BlogConfig> config
+@inject MarkdownPipeline pipeline
+
+
+<nav class="px-5">
+    <ol class="breadcrumb justify-content-center">
+        @{
+            var cur = "/";
+        }
+        @for (int i = 0; i < _parts.Length - 1; ++i)
+        {
+            cur = Path.Join(cur, _parts[i]);
+            <li class="breadcrumb-item"><a class="link p-1 rounded" href="@cur">@_parts[i]</a></li>
+        }
+
+        <li class="breadcrumb-item active"><span class="p-1">@_parts[^1]</span></li>
+    </ol>
+</nav>
+
+<hr class="w-100" />
+
+@if (_article is not null)
+{
+    <PageTitle>@_article.Name[..^3]</PageTitle>
+    var markdown = File.ReadAllText(Path.Combine(config.Value.GitLocalPath, _article.Directory, _article.Name));
+    var text = HttpUtility.UrlEncode(Encoding.UTF8.GetBytes(markdown.Distinct().ToArray()));
+
+    <HeadContent>
+        <link href="@Assets["css/nord.css"]" rel="stylesheet" type="text/css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap&text=@text"
+            rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css"
+            integrity="sha384-5TcZemv2l/9On385z///+d7MSYlvIEw9FuZTIdZ14vJLqWphw7e7ZPuOiCHJcFCP" crossorigin="anonymous">
+    </HeadContent>
+
+    <JS Src="./js/article.js" />
+
+    var ast = Markdown.Parse(markdown, pipeline);
+    foreach (var img in ast.Descendants<LinkInline>().Where(it => it.IsImage))
+    {
+        if (img.Url is null || img.Url.StartsWith("http")) return;
+        img.Url = Path.Combine("/static", _article.Directory, img.Url);
+    }
+    var builder = new StringBuilder();
+    var textWriter = new StringWriter(builder);
+    var renderer = new HtmlRenderer(textWriter);
+    pipeline.Setup(renderer);
+    renderer.Render(ast);
+
+    <div id="article" class="para-indent-4 text-start px-4"
+        style="font-family: Noto Serif, serif; font-weight: 500; font-size: large">
+        @((MarkupString)builder.ToString())
+    </div>
+}
+else
+{
+    <PageTitle>ls @Path.Combine(_parts)</PageTitle>
+    <div class="container">
+        <div class="row">
+            @foreach (var subDir in _subDirs)
+            {
+                var title = Path.GetFileName(subDir);
+                <div class="col-sm-12 col-xl-6 my-2 leading-mark">
+                    <a class="btn link text-start fw-bold w-100 h-100 fs-5 line-truncate-2" href="/article/@subDir"
+                        title="@title">🖿 @title/</a>
+                </div>
+            }
+            @foreach (var article in _articles!)
+            {
+                <ArticleLink class="col-sm-12 col-xl-6 my-2 leading-mark" Article="article" />
+            }
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public string? Slug { get; set; }
+
+    Models.Article? _article;
+    List<Models.Article>? _articles;
+    List<string> _subDirs = [];
+
+    string[] _parts = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        var pathInRepo = Slug + ".md";
+        var (dir, name) = (Path.GetDirectoryName(pathInRepo), Path.GetFileName(pathInRepo));
+        if (await context.Articles.Where(a => a.Directory == dir && a.Name == name).SingleOrDefaultAsync() is { } article)
+        {
+            _article = article;
+            _parts = ["article", .. Path.Combine(dir!, name[..^3]).Split('/')];
+        }
+        else
+        {
+            var normPath = Path.GetDirectoryName(Slug + '/') ?? string.Empty;
+            _parts = ["article", .. normPath.Split('/').Where(it => it != string.Empty)];
+            _articles = await context.Articles.Where(a => a.Directory == normPath).ToListAsync();
+
+            var combinedDir = Path.Combine(config.Value.GitLocalPath, normPath);
+            if (Directory.Exists(combinedDir))
+            {
+                _subDirs = Directory.GetDirectories(combinedDir)
+                .Select(Path.GetFileName)
+                .Select(name => Path.Combine(normPath, name!))
+                .Where(it => context.Articles.Any(a => a.Directory.StartsWith(it)))
+                .ToList();
+            }
+        }
+    }
+}

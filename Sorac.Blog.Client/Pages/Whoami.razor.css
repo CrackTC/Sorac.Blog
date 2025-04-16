@@ -1,0 +1,9 @@
+code {
+    background-color: var(--color-surface-2);
+    color: var(--color-on-surface);
+    border-radius: 0.375rem;
+    padding: 0.1rem 0.2rem;
+    margin: 0 0.1rem;
+    box-decoration-break: clone;
+    font-family: 'Maple Mono';
+}

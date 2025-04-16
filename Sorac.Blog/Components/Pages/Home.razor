@@ -1,0 +1,65 @@
+﻿@page "/"
+@inject BlogDbContext context
+@inject NavigationManager navManager
+
+<PageTitle>Zipped Sora</PageTitle>
+
+<div class="container">
+    <div class="row">
+        @foreach (var article in _articles)
+        {
+            <ArticleLink class="col-sm-12 col-xl-6 my-2 leading-mark" Article="article" />
+        }
+    </div>
+</div>
+
+<hr />
+
+<div class="d-flex justify-content-center pb-2">
+    <div>
+        @{
+            var disabled = Page is <= 1;
+            var status = disabled ? "disabled" : string.Empty;
+            var href = navManager.GetUriWithQueryParameter("p", Page - 1);
+        }
+        <a class="link btn @status" href="@href">&lt;</a>
+    </div>
+    <div class="align-content-center mx-3">
+        @Page / @_pageTotal
+    </div>
+    <div>
+        @{
+            disabled = Page >= _pageTotal;
+            status = disabled ? "disabled" : string.Empty;
+            href = navManager.GetUriWithQueryParameter("p", Page + 1);
+        }
+        <a class="link btn @status" href="@href">&gt;</a>
+    </div>
+</div>
+
+@code {
+    [SupplyParameterFromQuery(Name = "p")]
+    private int? Page { get; set; }
+
+    private List<Models.Article> _articles = [];
+    private int _pageTotal;
+    private int _itemsPerPage = 24;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var count = await context.Articles.AsNoTracking().CountAsync();
+        _pageTotal = count / _itemsPerPage;
+        if (count % _itemsPerPage is not 0) _pageTotal++;
+
+        var page = Page.GetValueOrDefault(1);
+        if (page is < 1) page = 1;
+        if (page > _pageTotal) page = _pageTotal;
+        Page = page;
+
+        _articles = await context.Articles
+            .AsNoTracking()
+            .OrderByDescending(it => it.LastUpdated)
+            .Skip((page - 1) * _itemsPerPage)
+            .Take(_itemsPerPage).ToListAsync();
+    }
+}

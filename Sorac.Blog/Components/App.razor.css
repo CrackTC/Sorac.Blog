@@ -1,0 +1,206 @@
+body {
+    --nord0-deeper: #242933;
+    --nord0: #2e3440;
+    --nord1: #3b4252;
+    --nord2: #434c5e;
+    --nord3: #4c566a;
+    --nord3-lighter: #7b88a1;
+    --nord4-deeper: #abb9cf;
+    --nord4: #d8dee9;
+    --nord5: #e5e9f0;
+    --nord6: #eceff4;
+    --nord6-lighter: #f2f4f8;
+    --nord7: #8fbcbb;
+    --nord8: #88c0d0;
+    --nord9: #81a1c1;
+    --nord10: #5e81ac;
+    --nord11: #bf616a;
+    --nord12: #d08770;
+    --nord13: #ebcb8b;
+    --nord14: #a3be8c;
+    --nord14-deeper: #8fb073;
+    --nord15: #b48ead;
+
+    color-scheme: dark light;
+
+    --color-surface-0: var(--nord0-deeper);
+    --color-surface-1: var(--nord0);
+    --color-surface-2: var(--nord1);
+    --color-surface-3: var(--nord2);
+    --color-on-surface: var(--nord4);
+    --color-outline: var(--nord4-deeper);
+
+    --color-accent: var(--nord7);
+    --color-primary: var(--nord8);
+    --color-secondary: var(--nord9);
+    --color-tertiary: var(--nord10);
+    --color-on-container: var(--nord1);
+
+    --color-error: var(--nord11);
+    --color-on-error: var(--nord4);
+    --color-warning: var(--nord12);
+    --color-on-warning: var(--nord1);
+    --color-success: var(--nord14);
+    --color-on-success: var(--nord1);
+    --color-info: var(--nord10);
+    --color-on-info: var(--nord1);
+
+    --color-selection: var(--nord4);
+    --color-on-selection: var(--nord0);
+
+    --color-link: var(--nord8);
+}
+
+@media (prefers-color-scheme: light) {
+    body {
+        --color-surface-0: var(--nord6-lighter);
+        --color-surface-1: #ffffff;
+        --color-surface-2: var(--nord6);
+        --color-surface-3: var(--nord5);
+        --color-on-surface: var(--nord3);
+        --color-outline: var(--nord3-lighter);
+
+        --color-accent: var(--nord7);
+        --color-primary: var(--nord8);
+        --color-secondary: var(--nord9);
+        --color-tertiary: var(--nord10);
+        --color-on-container: var(--nord1);
+
+        --color-error: var(--nord11);
+        --color-on-error: var(--nord4);
+        --color-warning: var(--nord12);
+        --color-on-warning: var(--nord1);
+        --color-success: var(--nord14);
+        --color-on-success: var(--nord1);
+        --color-info: var(--nord10);
+        --color-on-info: var(--nord1);
+
+        --color-selection: var(--nord2);
+        --color-on-selection: var(--nord4);
+
+        --color-link: var(--nord9);
+    }
+}
+
+@font-face {
+    font-family: MapleMono;
+    font-style: normal;
+    font-weight: normal;
+    src: url('fonts/MapleMono-Regular.woff2');
+}
+
+@font-face {
+    font-family: MapleMono;
+    font-style: italic;
+    font-weight: normal;
+    src: url('fonts/MapleMono-Italic.woff2');
+}
+
+@font-face {
+    font-family: MapleMono;
+    font-style: italic;
+    font-weight: bold;
+    src: url('fonts/MapleMono-BoldItalic.woff2');
+}
+
+:root ::deep body {
+    font-family: MapleMono, monospace;
+}
+
+:root ::deep ::selection {
+    background-color: var(--color-selection);
+    color: var(--color-on-selection);
+}
+
+:root ::deep .surface-0 {
+    background-color: var(--color-surface-0);
+    color: var(--color-on-surface);
+}
+
+:root ::deep .surface-1 {
+    background-color: var(--color-surface-1);
+    color: var(--color-on-surface);
+}
+
+@media (max-width: 575.98px) {
+    :root ::deep .surface-1 {
+        border-radius: 0 !important;
+    }
+}
+
+:root ::deep .nav-link.active {
+    background-color: var(--color-surface-2);
+}
+
+:root ::deep .nav-link:hover {
+    background-color: var(--color-surface-2);
+}
+
+:root ::deep .nav-link:focus-visible {
+    box-shadow: none;
+}
+
+:root ::deep .link {
+    color: var(--color-link);
+    transition: background-color 0.2s ease-in-out;
+    text-decoration: none;
+}
+
+:root ::deep .link:hover {
+    background-color: var(--color-surface-2);
+}
+
+:root ::deep hr {
+    border: 1px solid var(--color-outline);
+}
+
+:root ::deep del {
+    text-decoration-thickness: 0.05em;
+}
+
+:root ::deep .line-truncate-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    line-clamp: 2;
+    max-height: 2lh;
+    overflow: hidden;
+}
+
+:root ::deep .leading-mark {
+    display: inline-flex;
+    align-items: center;
+    --mark-size: 0.8em;
+    --mark-margin-right: 0.5em;
+}
+
+:root ::deep .leading-mark::before {
+    display: inline-block;
+    content: '';
+    mask-image: url('/img/chevron.svg');
+    rotate: -90deg;
+    height: var(--mark-size);
+    width: var(--mark-size);
+    margin-left: calc(-1 * (var(--mark-size) + var(--mark-margin-right)));
+    margin-right: var(--mark-margin-right);
+    background-color: transparent;
+    transition: background-color 0.2s ease-in-out, margin-left 0.2s ease-in-out;
+}
+
+:root ::deep .leading-mark>* {
+    width: calc(100% - var(--mark-margin-right));
+}
+
+:root ::deep .leading-mark:hover::before {
+    background-color: var(--color-on-surface);
+    margin-left: 0;
+}
+
+:root ::deep .text-wrap-balance {
+    text-wrap-style: balance;
+    word-wrap: break-word;
+}
+
+:root ::deep .para-indent-4>p {
+    text-indent: 4ch;
+}

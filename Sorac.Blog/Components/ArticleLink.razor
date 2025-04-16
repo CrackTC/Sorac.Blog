@@ -1,0 +1,18 @@
+<div @attributes="InputAttributes">
+    <a class="btn link text-start w-100 h-100" href="/article/@Path.Combine(Article.Directory, Article.Name[..^3])">
+        <div>
+            <h5 class="fw-bold line-truncate-2 text-wrap-balance">
+                @Article.Name[..^3]
+            </h5>
+            <div>🕗 @Article.LastUpdated</div>
+        </div>
+    </a>
+</div>
+
+@code {
+    [Parameter]
+    public required Models.Article Article { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? InputAttributes { get; set; }
+}

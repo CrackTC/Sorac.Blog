@@ -1,0 +1,50 @@
+::deep table {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+::deep th {
+    background-color: var(--color-surface-3);
+    padding: 1em;
+}
+
+::deep td {
+    background-color: var(--color-surface-2);
+    padding: 1em;
+}
+
+::deep th + th, ::deep td + td {
+    border-left: 2px solid var(--color-surface-1);
+}
+
+::deep tr {
+    border-bottom: 2px solid var(--color-surface-1);
+}
+
+::deep table > * > * > * {
+    color: var(--color-on-surface);
+}
+
+::deep table tr:last-child td:first-child {
+    border-bottom-left-radius: 0.5rem;
+}
+
+::deep table tr:last-child td:last-child {
+    border-bottom-right-radius: 0.5rem;
+}
+
+::deep table tr:first-child th:first-child {
+    border-top-left-radius: 0.5rem;
+}
+
+::deep table tr:first-child th:last-child {
+    border-top-right-radius: 0.5rem;
+}
+
+.link {
+    box-decoration-break: clone;
+}
+
+.link:hover {
+    background-color: var(--color-surface-3) !important;
+}

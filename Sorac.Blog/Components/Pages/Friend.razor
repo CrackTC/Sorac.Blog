@@ -1,0 +1,26 @@
+@page "/friend"
+@inject BlogDbContext context
+
+<div class="container">
+<div class="row py-1">
+    <table class="col col-lg-10">
+        <thead>
+            <tr>
+                <th>Iface</th>
+                <th>Address</th>
+                <th>HWaddress</th>
+            </tr
+        </thead>
+        <tbody>
+            @foreach (var friend in context.Friends.AsNoTracking().OrderBy(f => f.Name))
+            {
+                <tr>
+                    <td><img class="rounded-1 m-2" src="@friend.IconUrl" alt="@friend.Name's avatar" style="width: 4em" /></td>
+                    <td>@friend.Name</td>
+                    <td><a class="link rounded p-1 m-1" href="@friend.Url" target="_blank">@friend.Url</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+</div>

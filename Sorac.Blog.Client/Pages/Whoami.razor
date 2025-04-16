@@ -1,0 +1,83 @@
+﻿@page "/whoami"
+@rendermode InteractiveWebAssembly
+
+<PageTitle>Who Am I</PageTitle>
+
+<div class="mx-3">
+    <div class="progress" role="progressbar"
+        style="height: @(_progressHeight)em; background-color: var(--color-on-container); transition: height 0.3s ease-in-out;">
+        <div class="progress-bar"
+            style="width: @_progress%; background-color: var(--color-primary); transition: width 0.5s ease-in-out;" />
+    </div>
+</div>
+
+<h2 class="pt-2">Who am I?</h2>
+
+<div class="text-start para-indent-4 px-5">
+    <p>
+        <strong>ID</strong>: <em>CrackTC</em> or <em>Soraccc</em><del>, suffix by 'P' in BNEI games which stands for 'Producer'</del>.
+    </p>
+    <p>
+        <b>Description</b>: Average university student | Coding | Gaming<del> | アニメ</del>.
+    </p
+
+    <hr />
+    <div class="text-center">(begin 'opinioned)</div>
+    <hr />
+
+    <p>
+        As a coder, I'm a fan of
+        <a class="link rounded px-1" href="https://groups.csail.mit.edu/mac/projects/scheme/" target="_blank">scheme</a>
+        and
+        <a class="link rounded px-1" href="https://www.lua.org" target="_blank">lua</a>,
+        although I don't use them much. For most of my projects, I use
+        <a class="link rounded px-1" href="https://learn.microsoft.com/en-us/dotnet/csharp/" target="_blank">C#</a>
+        (btw this website server is written in Blazor), and find it enjoyable too. I'm also a big fan of
+        <a class="link rounded px-1" href="https://www.kernel.org" target="_blank">Linux</a>,
+        and I use
+        <del><a class="link rounded px-1" href="https://archlinux.org" target="_blank">Arch Linux</a></del><a class="link rounded px-1" href="https://nixos.org" target="_blank">NixOS</a>
+        as my daily driver.
+    </p>
+    <p>
+        As a gamer, I play a range of different types,
+        such as games focused on strategy, racing, or role-playing,
+        but my skill level isn't high.
+        I'm also a lover of rhythm games,
+        and spend a lot of time playing
+        <a class="link rounded px-1" href="https://github.com/exch-bms2/beatoraja" target="_blank">Beatoraja</a>.
+    </p>
+    <hr />
+    <div class="text-center">(end 'opinioned)</div>
+    <hr />
+    # traceroute
+    <ul>
+        <li>
+            GitHub: <a class="link rounded px-1" href="https://github.com/CrackTC" target="_blank">CrackTC</a>
+        </li>
+        <li>
+            Email: <a class="link rounded px-1" href="mailto:sora@ieee.org" target="_blank">sora@ieee.org</a>
+        </li>
+        <li>
+            Discord: <code>CrackTC#1812</code>.
+        </li>
+    </ul>
+</div>
+
+<hr />
+
+<div class="m-3">
+    <img src="@Assets["img/whoami_1.webp"]" class="img-fluid rounded" alt="whoami" @onload="OnImageLoaded" />
+</div>
+
+@code {
+    private float _progressHeight = 0.5f;
+    private int _progress = 0;
+    private async void OnImageLoaded()
+    {
+        _progress = 100;
+        await Task.Delay(500);
+        _progressHeight = 0f;
+        Console.WriteLine("ImageLoaded");
+        StateHasChanged();
+    }
+}
