@@ -22,7 +22,8 @@ builder.Services
     {
         options.UseSqlite(builder.Configuration.GetConnectionString(nameof(BlogDbContext)));
     })
-    .AddHostedService<GitService>()
+    .AddSingleton<GitService>()
+    .AddHostedService<BootstrapService<GitService>>()
     .Configure<BlogConfig>(builder.Configuration.GetRequiredSection("Blog"))
     .AddJSComponents()
     .AddSingleton(
