@@ -155,7 +155,7 @@ internal partial class GitService(
         await RollBackAsync(dbContext, mergeBase, ct);
 
         _repo.Reset(ResetMode.Hard, mergeBase);
-        if (_repo.Merge(remoteBranch, new Signature(string.Empty, string.Empty, DateTimeOffset.UnixEpoch), new() { FastForwardStrategy = FastForwardStrategy.FastForwardOnly }).Status is MergeStatus.Conflicts)
+        if (_repo.Merge(remoteBranch, new Signature("Sorac.Blog", "blog@sora.zip", DateTimeOffset.UnixEpoch), new() { FastForwardStrategy = FastForwardStrategy.FastForwardOnly }).Status is MergeStatus.Conflicts)
         {
             logger.LogWarning("Merge conflicts detected. Please resolve them manually.");
             return;
