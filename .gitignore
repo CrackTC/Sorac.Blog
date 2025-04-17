@@ -482,3 +482,6 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+/Sorac.Blog/blog
+/Sorac.Blog/blog.db*
