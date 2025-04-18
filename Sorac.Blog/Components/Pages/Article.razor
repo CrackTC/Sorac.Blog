@@ -31,7 +31,7 @@
 
 @if (_article is not null)
 {
-    <PageTitle>@_article.Name[..^3]</PageTitle>
+    <PageTitle>@(_article.Title ?? _article.Name[..^3])</PageTitle>
     var markdown = File.ReadAllText(Path.Combine(config.Value.GitLocalPath, _article.Directory, _article.Name));
     var text = HttpUtility.UrlEncode(Encoding.UTF8.GetBytes(markdown.Distinct().ToArray()));
 
@@ -64,7 +64,7 @@
 }
 else
 {
-    <PageTitle>ls @Path.Combine(_parts)</PageTitle>
+    <PageTitle>ls /@Path.Combine(_parts)</PageTitle>
     <HeadContent>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
