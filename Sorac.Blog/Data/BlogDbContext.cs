@@ -7,8 +7,9 @@ internal class BlogDbContext(DbContextOptions<BlogDbContext> options) : DbContex
 {
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        builder.Entity<Article>().HasIndex(it => new { it.Directory, it.Name }).IsUnique();
-        builder.Entity<Article>().HasIndex(it => it.LastUpdated);
+        var article = builder.Entity<Article>();
+        article.HasIndex(it => new { it.Directory, it.Name }).IsUnique();
+        article.HasIndex(it => it.CreatedAt);
     }
 
 

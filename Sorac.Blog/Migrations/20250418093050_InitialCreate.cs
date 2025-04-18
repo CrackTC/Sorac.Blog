@@ -19,7 +19,9 @@ namespace Sorac.Blog.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Directory = table.Column<string>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
-                    LastUpdated = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    Title = table.Column<string>(type: "TEXT", nullable: true),
+                    LastUpdated = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -55,15 +57,15 @@ namespace Sorac.Blog.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Articles_CreatedAt",
+                table: "Articles",
+                column: "CreatedAt");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Articles_Directory_Name",
                 table: "Articles",
                 columns: new[] { "Directory", "Name" },
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Articles_LastUpdated",
-                table: "Articles",
-                column: "LastUpdated");
         }
 
         /// <inheritdoc />

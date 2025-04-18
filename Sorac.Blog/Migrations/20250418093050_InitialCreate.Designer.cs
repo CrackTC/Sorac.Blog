@@ -11,7 +11,7 @@ using Sorac.Blog.Data;
 namespace Sorac.Blog.Migrations
 {
     [DbContext(typeof(BlogDbContext))]
-    [Migration("20250416102544_InitialCreate")]
+    [Migration("20250418093050_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -26,6 +26,9 @@ namespace Sorac.Blog.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Directory")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -37,9 +40,12 @@ namespace Sorac.Blog.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Title")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("LastUpdated");
+                    b.HasIndex("CreatedAt");
 
                     b.HasIndex("Directory", "Name")
                         .IsUnique();

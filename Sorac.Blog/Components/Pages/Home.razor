@@ -58,7 +58,7 @@
 
         _articles = await context.Articles
             .AsNoTracking()
-            .OrderByDescending(it => it.LastUpdated)
+            .OrderByDescending(it => it.CreatedAt)
             .Skip((page - 1) * _itemsPerPage)
             .Take(_itemsPerPage).ToListAsync();
     }

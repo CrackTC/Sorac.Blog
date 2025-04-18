@@ -43,7 +43,8 @@ internal partial class GitService(
                     {
                         Directory = Path.GetDirectoryName(change.Path)!,
                         Name = Path.GetFileName(change.Path)!,
-                        LastUpdated = time!.Value
+                        LastUpdated = time!.Value,
+                        CreatedAt = time!.Value,
                     }, ct);
                     break;
                 }
@@ -84,7 +85,15 @@ internal partial class GitService(
     private async Task RollCommitAsync(BlogDbContext dbContext, Commit? srcCommit, Commit? dstCommit, CancellationToken ct)
     {
         var time = dstCommit?.Author.When.DateTime;
-        var changes = _repo.Diff.Compare<TreeChanges>(srcCommit?.Tree, dstCommit?.Tree).ToList();
+        var changes = _repo.Diff.Compare<TreeChanges>(srcCommit?.Tree, dstCommit?.Tree, new CompareOptions
+        {
+            Similarity = new SimilarityOptions
+            {
+                RenameDetectionMode = RenameDetectionMode.Renames,
+                WhitespaceMode = WhitespaceMode.IgnoreAllWhitespace,
+                RenameLimit = int.MaxValue
+            }
+        });
         foreach (var change in changes)
             await RollChangeAsync(dbContext, change, time, ct);
     }
@@ -155,13 +164,49 @@ internal partial class GitService(
         await RollBackAsync(dbContext, mergeBase, ct);
 
         _repo.Reset(ResetMode.Hard, mergeBase);
-        if (_repo.Merge(remoteBranch, new Signature("Sorac.Blog", "blog@sora.zip", DateTimeOffset.UnixEpoch), new() { FastForwardStrategy = FastForwardStrategy.FastForwardOnly }).Status is MergeStatus.Conflicts)
+        if (_repo.Merge(
+                remoteBranch,
+                new Signature("Sorac.Blog", "blog@sora.zip", DateTimeOffset.UnixEpoch),
+                new() { FastForwardStrategy = FastForwardStrategy.FastForwardOnly }
+            ).Status is MergeStatus.Conflicts)
         {
             logger.LogWarning("Merge conflicts detected. Please resolve them manually.");
             return;
         }
 
         await RollForwardAsync(dbContext, mergeBase, ct);
+    }
+
+    private async Task GenerateTitlesAsync(BlogDbContext dbContext, CancellationToken ct)
+    {
+        foreach (var article in dbContext.Articles.Where(it => it.Title == null))
+        {
+            var path = Path.Combine(config.Value.GitLocalPath, article.Directory, article.Name);
+
+            if (!File.Exists(path))
+            {
+                logger.LogWarning("Article {Path} not found in the file system.", path);
+                continue;
+            }
+
+            using var reader = File.OpenText(path);
+            while (await reader.ReadLineAsync(ct) is { } line)
+            {
+                if (line.StartsWith("# "))
+                {
+                    article.Title = line[2..];
+                    break;
+                }
+
+                if (!string.IsNullOrWhiteSpace(line))
+                {
+                    logger.LogWarning("Title not found in {Path}.", path);
+                    break;
+                }
+            }
+        }
+
+        await dbContext.SaveChangesAsync(ct);
     }
 
     public async Task StartAsync(CancellationToken ct)
@@ -180,9 +225,9 @@ internal partial class GitService(
         if (dbContext.GitStates.AsNoTracking().SingleOrDefault() is not { LastCommitSha: { } oldCommitHash })
             oldCommitHash = null;
 
-
         var oldCommit = oldCommitHash is not null ? _repo.Lookup<Commit>(oldCommitHash) : null;
         await RollForwardAsync(dbContext, oldCommit, ct);
+        await GenerateTitlesAsync(dbContext, ct);
     }
 
     public Task StopAsync(CancellationToken ct)

@@ -2,7 +2,7 @@
     <a class="btn link text-start w-100 h-100" href="/article/@Path.Combine(Article.Directory, Article.Name[..^3])">
         <div>
             <h5 class="fw-bold line-truncate-2 text-wrap-balance">
-                @Article.Name[..^3]
+                @(Article.Title ?? Article.Name[..^3])
             </h5>
             <div>🕗 @Article.LastUpdated</div>
         </div>
