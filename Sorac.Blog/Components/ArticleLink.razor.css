@@ -1,0 +1,23 @@
+@font-face {
+    font-family: 'Symbols Nerd Font';
+    src: url('fonts/SymbolsNerdFont.woff2') format("woff2");
+    font-weight: normal;
+    font-style: normal;
+}
+
+.nf {
+    font-family: 'Symbols Nerd Font';
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+}
+
+.nf-md-clock::before {
+    content: "\f0954";
+}
+
+.nf-fa-pen::before {
+    content: "\f01f";
+}

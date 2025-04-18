@@ -86,21 +86,21 @@ body {
     font-family: MapleMono;
     font-style: normal;
     font-weight: normal;
-    src: url('fonts/MapleMono-Regular.woff2');
+    src: url('fonts/MapleMono-Regular.woff2') format("woff2");
 }
 
 @font-face {
     font-family: MapleMono;
     font-style: italic;
     font-weight: normal;
-    src: url('fonts/MapleMono-Italic.woff2');
+    src: url('fonts/MapleMono-Italic.woff2') format("woff2");
 }
 
 @font-face {
     font-family: MapleMono;
     font-style: italic;
     font-weight: bold;
-    src: url('fonts/MapleMono-BoldItalic.woff2');
+    src: url('fonts/MapleMono-BoldItalic.woff2') format("woff2");
 }
 
 :root ::deep body {
