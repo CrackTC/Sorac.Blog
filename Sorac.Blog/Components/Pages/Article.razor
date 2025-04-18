@@ -12,7 +12,7 @@
 @inject MarkdownPipeline pipeline
 
 
-<nav class="px-5">
+<nav class="px-sm-5">
     <ol class="breadcrumb justify-content-center">
         @{
             var cur = "/";
@@ -58,7 +58,7 @@
     pipeline.Setup(renderer);
     renderer.Render(ast);
 
-    <div id="article" class="text-start px-4 noto-serif-sc-normal" >
+    <div id="article" class="text-start px-sm-4 noto-serif-sc-normal" >
         @((MarkupString)builder.ToString())
     </div>
 }
