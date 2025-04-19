@@ -1,15 +1,9 @@
 ﻿@page "/whoami"
-@rendermode InteractiveWebAssembly
+@inject JSElementReferenceScope Elems
 
 <PageTitle>Who Am I</PageTitle>
 
-<div class="mx-3">
-    <div class="progress" role="progressbar"
-        style="height: @(_progressHeight)em; background-color: var(--color-on-container); transition: height 0.3s ease-in-out;">
-        <div class="progress-bar"
-            style="width: @_progress%; background-color: var(--color-primary); transition: width 0.5s ease-in-out;" />
-    </div>
-</div>
+<ProgressBar For="Elems"/>
 
 <h2 class="pt-2">Who am I?</h2>
 
@@ -66,18 +60,5 @@
 <hr />
 
 <div class="m-3">
-    <img src="@Assets["img/whoami_1.webp"]" class="img-fluid rounded" alt="whoami" @onload="OnImageLoaded" />
+    <img src="@Assets["img/whoami_1.webp"]" loading="lazy" class="img-fluid rounded" alt="whoami" data-ref="@Elems["img"]"/>
 </div>
-
-@code {
-    private float _progressHeight = 0.5f;
-    private int _progress = 0;
-    private async void OnImageLoaded()
-    {
-        _progress = 100;
-        await Task.Delay(500);
-        _progressHeight = 0f;
-        Console.WriteLine("ImageLoaded");
-        StateHasChanged();
-    }
-}

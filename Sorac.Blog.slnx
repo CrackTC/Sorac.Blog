@@ -4,6 +4,5 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
-  <Project Path="Sorac.Blog.Client/Sorac.Blog.Client.csproj" />
   <Project Path="Sorac.Blog/Sorac.Blog.csproj" />
 </Solution>

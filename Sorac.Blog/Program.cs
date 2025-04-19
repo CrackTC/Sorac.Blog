@@ -13,9 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents()
-    .AddInteractiveWebAssemblyComponents();
+builder.Services.AddRazorComponents();
 
 builder.Services
     .AddDbContext<BlogDbContext>(options =>
@@ -58,10 +56,7 @@ else
 app.UseAntiforgery();
 
 app.MapStaticAssets();
-app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode()
-    .AddInteractiveWebAssemblyRenderMode()
-    .AddAdditionalAssemblies(typeof(Sorac.Blog.Client._Imports).Assembly);
+app.MapRazorComponents<App>();
 
 var path = Path.Combine(
     Directory.GetCurrentDirectory(),

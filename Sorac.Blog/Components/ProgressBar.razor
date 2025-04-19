@@ -1,0 +1,17 @@
+@inject JSElementReferenceScope Ref
+
+<div class="mx-3">
+    <div class="progress" role="progressbar" data-ref="@Ref["progress"]"
+        style="height: 0.5em; background-color: var(--color-on-container); transition: height 0.3s ease-in-out;">
+        <div class="progress-bar" data-ref="@Ref["progressBar"]"
+            style="width: 0%; background-color: var(--color-primary); transition: width 0.5s ease-in-out;" />
+    </div>
+</div>
+
+<JS Src="./js/progress.js" Args="[Ref, For]" />
+
+@code {
+    [Parameter]
+    [EditorRequired]
+    public JSElementReferenceScope For { get; set; } = default!;
+}

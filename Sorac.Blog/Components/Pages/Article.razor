@@ -1,15 +1,17 @@
 ﻿@page "/article/{*slug}"
 
-@using System.Web;
-@using System.Text;
-@using Markdig;
-@using Markdig.Syntax;
-@using Markdig.Syntax.Inlines;
-@using HtmlRenderer = Markdig.Renderers.HtmlRenderer;
+@using System.Web
+@using System.Text
+@using Markdig
+@using Markdig.Renderers.Html
+@using Markdig.Syntax
+@using Markdig.Syntax.Inlines
+@using HtmlRenderer = Markdig.Renderers.HtmlRenderer
 
 @inject BlogDbContext context
 @inject IOptions<BlogConfig> config
 @inject MarkdownPipeline pipeline
+@inject JSElementReferenceScope Elems
 
 <nav class="px-sm-5">
     <ol class="breadcrumb justify-content-center">
@@ -31,6 +33,8 @@
 @if (_article is not null)
 {
     <PageTitle>@(_article.Title ?? _article.Name[..^3])</PageTitle>
+    <ProgressBar For="Elems"/>
+
     var markdown = File.ReadAllText(Path.Combine(config.Value.GitLocalPath, _article.Directory, _article.Name));
     var text = HttpUtility.UrlEncode(Encoding.UTF8.GetBytes(markdown.Distinct().ToArray()));
 
@@ -50,6 +54,10 @@
     {
         if (img.Url is null || img.Url.StartsWith("http")) return;
         img.Url = Path.Combine("/static", _article.Directory, img.Url);
+        var attr = new HtmlAttributes();
+        attr.AddProperty("data-ref", Elems[Guid.NewGuid().ToString()]);
+        attr.AddClass("img-fluid");
+        img.SetAttributes(attr);
     }
     var builder = new StringBuilder();
     var textWriter = new StringWriter(builder);
