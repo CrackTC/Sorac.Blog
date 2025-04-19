@@ -4,13 +4,11 @@
 
 <PageTitle>Zipped Sora</PageTitle>
 
-<div class="container">
-    <div class="row">
-        @foreach (var article in _articles)
-        {
-            <ArticleLink class="col-sm-12 col-xl-6 my-2 leading-mark" Article="article" />
-        }
-    </div>
+<div class="row">
+    @foreach (var article in _articles)
+    {
+        <ArticleLink class="col-sm-12 col-xl-6 my-2 leading-mark" Article="article" />
+    }
 </div>
 
 <hr />

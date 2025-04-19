@@ -70,21 +70,19 @@ else
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Symbols+2&display=swap&text=%f0%9f%96%bf" rel="stylesheet">
     </HeadContent>
-    <div class="container">
-        <div class="row">
-            @foreach (var subDir in _subDirs)
-            {
-                var title = Path.GetFileName(subDir);
-                <div class="col-sm-12 col-xl-6 my-2 leading-mark">
-                    <a class="btn link text-start fw-bold w-100 fs-5 line-truncate-2" href="/article/@subDir"
-                        title="@title"><span class="noto-sans-symbols-2-regular">🖿</span> @title/</a>
-                </div>
-            }
-            @foreach (var article in _articles!)
-            {
-                <ArticleLink class="col-sm-12 col-xl-6 my-2 leading-mark" Article="article" />
-            }
-        </div>
+    <div class="row">
+        @foreach (var subDir in _subDirs)
+        {
+            var title = Path.GetFileName(subDir);
+            <div class="col-sm-12 col-xl-6 my-2 leading-mark">
+                <a class="btn link text-start fw-bold w-100 fs-5 line-truncate-2" href="/article/@subDir"
+                    title="@title"><span class="noto-sans-symbols-2-regular">🖿</span> @title/</a>
+            </div>
+        }
+        @foreach (var article in _articles!)
+        {
+            <ArticleLink class="col-sm-12 col-xl-6 my-2 leading-mark" Article="article" />
+        }
     </div>
 }
 

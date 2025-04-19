@@ -1,3 +1,9 @@
 #banner {
     text-wrap: balance;
 }
+
+@media (min-width: 744px) and (max-width: 768px) {
+    .container {
+        max-width: 700px;
+    }
+}
