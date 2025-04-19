@@ -122,3 +122,11 @@
 #article ::deep div.math {
     overflow: auto;
 }
+
+#article ::deep span.math {
+    display: inline-grid;
+    overflow: auto;
+    max-width: 100%;
+    padding: 0.2em;
+    margin: -0.2em;
+}
