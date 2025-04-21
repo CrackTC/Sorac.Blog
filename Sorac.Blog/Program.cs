@@ -16,6 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents();
 
 builder.Services
+    .AddHttpContextAccessor()
     .AddDbContext<BlogDbContext>(options =>
     {
         options.UseSqlite(builder.Configuration.GetConnectionString(nameof(BlogDbContext)));

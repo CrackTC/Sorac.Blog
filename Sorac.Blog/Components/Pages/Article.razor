@@ -12,6 +12,7 @@
 @inject IOptions<BlogConfig> config
 @inject MarkdownPipeline pipeline
 @inject JSElementReferenceScope Elems
+@inject IHttpContextAccessor httpContextAccessor
 
 <nav class="px-sm-5">
     <ol class="breadcrumb justify-content-center">
@@ -126,6 +127,10 @@ else
                 .Select(name => Path.Combine(normPath, name!))
                 .Where(it => context.Articles.Any(a => a.Directory.StartsWith(it)))
                 .ToList();
+            }
+            else
+            {
+                httpContextAccessor.HttpContext.Response.StatusCode = 404;
             }
         }
     }
