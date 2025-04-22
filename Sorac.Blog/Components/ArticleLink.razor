@@ -1,5 +1,12 @@
 <div @attributes="InputAttributes">
-    <a class="btn link text-start w-100 h-100" href="/article/@Path.Combine(Article.Directory, Article.Name[..^3])">
+    @{
+        var href = Path.Join([
+            "/article",
+            .. Article.Directory.Split('/').Select(Uri.EscapeDataString).ToArray(),
+            Uri.EscapeDataString(Article.Name[..^3])
+        ]);
+    }
+    <a class="btn link text-start w-100 h-100" href="@href">
         <div>
             <h5 class="fw-bold line-truncate-2 text-wrap-balance">
                 @(Article.Title ?? Article.Name[..^3])

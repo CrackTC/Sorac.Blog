@@ -181,7 +181,7 @@ internal partial class GitService(
     {
         foreach (var article in dbContext.Articles.Where(it => it.Title == null))
         {
-            var path = Path.Combine(config.Value.GitLocalPath, article.Directory, article.Name);
+            var path = Path.Join(config.Value.GitLocalPath, article.Directory, article.Name);
 
             if (!File.Exists(path))
             {
