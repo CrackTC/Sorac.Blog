@@ -44,18 +44,8 @@ builder.Logging.AddSimpleConsole(option =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseWebAssemblyDebugging();
-}
-else
-{
-    app.UseExceptionHandler("/Error", createScopeForErrors: true);
-}
-
+app.UseExceptionHandler("/Error", createScopeForErrors: true);
 app.UseAntiforgery();
-
 app.MapStaticAssets();
 app.MapRazorComponents<App>();
 

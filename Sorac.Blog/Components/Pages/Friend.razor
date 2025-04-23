@@ -1,5 +1,5 @@
 @page "/friend"
-@inject BlogDbContext context
+@inject BlogDbContext Context
 
 <PageTitle>Friends</PageTitle>
 
@@ -13,7 +13,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var friend in context.Friends.AsNoTracking().OrderBy(f => f.Name))
+            @foreach (var friend in Context.Friends.AsNoTracking().OrderBy(f => f.Name))
             {
                 <tr>
                     <td class="p-sm-1"><img class="img-fluid rounded-2" src="@friend.IconUrl" alt="@friend.Name's avatar" /></td>

@@ -2,10 +2,12 @@ namespace Sorac.Blog;
 
 public class BlogConfig
 {
-    public string ApiKey { get; set; } = string.Empty;
-    public required string GitRemoteUrl { get; set; }
-    public string GitLocalPath { get; set; } = "blog";
-    public string GitRemoteName { get; set; } = "origin";
-    public string GitRemoteBranchName { get; set; } = "origin/main";
-    public string GitLocalBranchName { get; set; } = "main";
+    public string ApiKey { get; init; } = string.Empty;
+    public required string GitRemoteUrl { get; init; }
+    public string GitLocalPath { get; init; } = "blog";
+    public string GitRemoteName { get; init; } = "origin";
+    public string GitRemoteBranchName { get; init; } = "origin/main";
+    public string GitLocalBranchName { get; init; } = "main";
+
+    public int ArticlesPerPage { get; init; } = 30;
 };

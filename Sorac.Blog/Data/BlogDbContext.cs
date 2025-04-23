@@ -13,7 +13,7 @@ internal class BlogDbContext(DbContextOptions<BlogDbContext> options) : DbContex
     }
 
 
-    public DbSet<GitState> GitStates { get; set; } = default!;
-    public DbSet<Article> Articles { get; set; } = default!;
-    public DbSet<Friend> Friends { get; set; } = default!;
+    public DbSet<GitState> GitStates { get; set; } = null!;
+    public DbSet<Article> Articles { get; set; } = null!;
+    public DbSet<Friend> Friends { get; set; } = null!;
 }

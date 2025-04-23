@@ -1,6 +1,7 @@
 ﻿@page "/"
-@inject BlogDbContext context
-@inject NavigationManager navManager
+@inject IOptions<BlogConfig> Config
+@inject BlogDbContext Context
+@inject NavigationManager NavManager
 
 <PageTitle>Zipped Sora</PageTitle>
 
@@ -18,7 +19,7 @@
         @{
             var disabled = Page is <= 1;
             var status = disabled ? "disabled" : string.Empty;
-            var href = navManager.GetUriWithQueryParameter("p", Page - 1);
+            var href = NavManager.GetUriWithQueryParameter("p", Page - 1);
         }
         <a class="link btn @status" href="@href">&lt;</a>
     </div>
@@ -29,7 +30,7 @@
         @{
             disabled = Page >= _pageTotal;
             status = disabled ? "disabled" : string.Empty;
-            href = navManager.GetUriWithQueryParameter("p", Page + 1);
+            href = NavManager.GetUriWithQueryParameter("p", Page + 1);
         }
         <a class="link btn @status" href="@href">&gt;</a>
     </div>
@@ -41,23 +42,23 @@
 
     private List<Models.Article> _articles = [];
     private int _pageTotal;
-    private int _itemsPerPage = 24;
 
     protected override async Task OnInitializedAsync()
     {
-        var count = await context.Articles.AsNoTracking().CountAsync();
-        _pageTotal = count / _itemsPerPage;
-        if (count % _itemsPerPage is not 0) _pageTotal++;
+        var articlesPerPage = Config.Value.ArticlesPerPage;
+        var count = await Context.Articles.AsNoTracking().CountAsync();
+        _pageTotal = count / articlesPerPage;
+        if (count % articlesPerPage is not 0) _pageTotal++;
 
         var page = Page.GetValueOrDefault(1);
         if (page is < 1) page = 1;
         if (page > _pageTotal) page = _pageTotal;
         Page = page;
 
-        _articles = await context.Articles
+        _articles = await Context.Articles
             .AsNoTracking()
             .OrderByDescending(it => it.CreatedAt)
-            .Skip((page - 1) * _itemsPerPage)
-            .Take(_itemsPerPage).ToListAsync();
+            .Skip((page - 1) * articlesPerPage)
+            .Take(articlesPerPage).ToListAsync();
     }
 }

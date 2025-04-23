@@ -4,7 +4,7 @@
     <div class="progress" role="progressbar" data-ref="@Ref["progress"]"
         style="height: 0.5em; background-color: var(--color-on-container); transition: height 0.3s ease-in-out;">
         <div class="progress-bar" data-ref="@Ref["progressBar"]"
-            style="width: 0%; background-color: var(--color-primary); transition: width 0.5s ease-in-out;" />
+             style="width: 0; background-color: var(--color-primary); transition: width 0.5s ease-in-out;" ></div>
     </div>
 </div>
 
@@ -13,5 +13,5 @@
 @code {
     [Parameter]
     [EditorRequired]
-    public JSElementReferenceScope For { get; set; } = default!;
+    public JSElementReferenceScope For { get; set; } = null!;
 }

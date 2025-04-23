@@ -1,6 +1,4 @@
 ﻿@page "/article/{*slug}"
-
-@using System.Web
 @using System.Text
 @using Markdig
 @using Markdig.Renderers.Html
@@ -8,18 +6,18 @@
 @using Markdig.Syntax.Inlines
 @using HtmlRenderer = Markdig.Renderers.HtmlRenderer
 
-@inject BlogDbContext context
-@inject IOptions<BlogConfig> config
-@inject MarkdownPipeline pipeline
+@inject BlogDbContext Context
+@inject IOptions<BlogConfig> Config
+@inject MarkdownPipeline Pipeline
 @inject JSElementReferenceScope Elems
-@inject IHttpContextAccessor httpContextAccessor
+@inject IHttpContextAccessor HttpContextAccessor
 
 <nav class="px-sm-5">
     <ol class="breadcrumb justify-content-center">
         @{
             var cur = "/";
         }
-        @for (int i = 0; i < _parts.Length - 1; ++i)
+        @for (var i = 0; i < _parts.Length - 1; ++i)
         {
             cur = Path.Join(cur, Uri.EscapeDataString(_parts[i]));
             <li class="breadcrumb-item"><a class="link p-1 rounded" href="@cur">@_parts[i]</a></li>
@@ -40,7 +38,7 @@
     <PageTitle>@(_article.Title ?? _article.Name[..^3])</PageTitle>
     <ProgressBar For="Elems"/>
 
-    var mdText = File.ReadAllText(Path.Join(config.Value.GitLocalPath, _article.Directory, _article.Name));
+    var mdText = File.ReadAllText(Path.Join(Config.Value.GitLocalPath, _article.Directory, _article.Name));
     var uniqChars = Uri.EscapeDataString(mdText.Distinct().ToArray());
 
     <HeadContent>
@@ -54,7 +52,7 @@
 
     <JS Src="./js/article.js" />
 
-    var ast = Markdown.Parse(mdText, pipeline);
+    var ast = Markdown.Parse(mdText, Pipeline);
     var imgBase = Path.Join(_parts[1..^1].Select(Uri.EscapeDataString).ToArray());
     foreach (var img in ast.Descendants<LinkInline>().Where(it => it.IsImage))
     {
@@ -68,7 +66,7 @@
     var builder = new StringBuilder();
     var textWriter = new StringWriter(builder);
     var renderer = new HtmlRenderer(textWriter);
-    pipeline.Setup(renderer);
+    Pipeline.Setup(renderer);
     renderer.Render(ast);
 
     <div id="article" class="text-start px-sm-4 noto-serif-sc-normal" >
@@ -118,24 +116,24 @@ else
 
         _parts = ["article", .. normalizedSlug.Split('/').Where(it => it != string.Empty)];
 
-        if (await context.Articles.AsNoTracking().Where(a => a.Directory == dir && a.Name == name + ".md").SingleOrDefaultAsync() is { } article)
+        if (await Context.Articles.AsNoTracking().Where(a => a.Directory == dir && a.Name == name + ".md").SingleOrDefaultAsync() is { } article)
         {
             _article = article;
             return;
         }
 
-        var fsDir = Path.Join(config.Value.GitLocalPath, normalizedSlug);
+        var fsDir = Path.Join(Config.Value.GitLocalPath, normalizedSlug);
         if (!Directory.Exists(fsDir))
         {
-            httpContextAccessor.HttpContext!.Response.StatusCode = 404;
+            HttpContextAccessor.HttpContext!.Response.StatusCode = 404;
             return;
         }
 
-        _articles = await context.Articles.AsNoTracking().Where(a => a.Directory == normalizedSlug).ToListAsync();
+        _articles = await Context.Articles.AsNoTracking().Where(a => a.Directory == normalizedSlug).ToListAsync();
         _subDirs = Directory.GetDirectories(fsDir)
             .Select(Path.GetFileName)
-            .Select(name => Path.Join(normalizedSlug, name))
-            .Where(it => context.Articles.Any(a => a.Directory.StartsWith(it)))
+            .Select(fileName => Path.Join(normalizedSlug, fileName))
+            .Where(it => Context.Articles.Any(a => a.Directory.StartsWith(it)))
             .ToList();
     }
 }

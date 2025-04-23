@@ -22,7 +22,7 @@ internal partial class GitService(
     private async Task<Article?> GetArticleByPathAsync(BlogDbContext dbContext, string path, CancellationToken ct)
     {
         await dbContext.SaveChangesAsync(ct);
-        var (dir, name) = (Path.GetDirectoryName(path)!, Path.GetFileName(path)!);
+        var (dir, name) = (Path.GetDirectoryName(path)!, Path.GetFileName(path));
         if (await dbContext.Articles.SingleOrDefaultAsync(it => it.Directory == dir && it.Name == name, ct) is { } article)
             return article;
 
@@ -42,9 +42,9 @@ internal partial class GitService(
                     await dbContext.AddAsync(new Article
                     {
                         Directory = Path.GetDirectoryName(change.Path)!,
-                        Name = Path.GetFileName(change.Path)!,
+                        Name = Path.GetFileName(change.Path),
                         LastUpdated = time!.Value,
-                        CreatedAt = time!.Value,
+                        CreatedAt = time.Value,
                     }, ct);
                     break;
                 }
@@ -72,7 +72,7 @@ internal partial class GitService(
                     if (await GetArticleByPathAsync(dbContext, change.OldPath, ct) is { } article)
                     {
                         article.Directory = Path.GetDirectoryName(change.Path)!;
-                        article.Name = Path.GetFileName(change.Path)!;
+                        article.Name = Path.GetFileName(change.Path);
                     }
                     break;
                 }
@@ -103,8 +103,8 @@ internal partial class GitService(
         logger.LogInformation("Rolling {direction}...", forward ? "forward" : "back");
 
         var branch = _repo.Branches[config.Value.GitLocalBranchName];
-        var commits = branch.Commits.TakeWhile(it => it.Sha != oldCommit?.Sha).Append(oldCommit).ToList().AsEnumerable();
-        if (forward) commits = commits.Reverse();
+        var commits = branch.Commits.TakeWhile(it => it.Sha != oldCommit?.Sha).Append(oldCommit).ToList();
+        if (forward) commits.Reverse();
 
         var srcCommit = commits.First();
 
@@ -142,7 +142,7 @@ internal partial class GitService(
         var cloneOptions = new CloneOptions(
             new FetchOptions { OnProgress = _ => !ct.IsCancellationRequested }
         );
-        await Task.Run(() => Repository.Clone(config.Value.GitRemoteUrl, config.Value.GitLocalPath, cloneOptions));
+        await Task.Run(() => Repository.Clone(config.Value.GitRemoteUrl, config.Value.GitLocalPath, cloneOptions), ct);
     }
 
     public async Task PullAsync(BlogDbContext dbContext, CancellationToken ct)
