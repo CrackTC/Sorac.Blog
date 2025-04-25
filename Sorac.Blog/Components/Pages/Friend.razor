@@ -1,7 +1,10 @@
 @page "/friend"
 @inject BlogDbContext Context
+@inject JSElementReferenceScope Elems
 
 <PageTitle>Friends</PageTitle>
+
+<ProgressBar class="mb-3" For="Elems"/>
 
 <div class="row py-1 px-sm-2">
     <table class="col col-lg-10 mx-auto" style="table-layout: fixed">
@@ -16,7 +19,9 @@
             @foreach (var friend in Context.Friends.AsNoTracking().OrderBy(f => f.Name))
             {
                 <tr>
-                    <td class="p-sm-1"><img class="img-fluid rounded-2" src="@friend.IconUrl" alt="@friend.Name's avatar" /></td>
+                    <td class="p-sm-1">
+                        <img class="img-fluid rounded-2" src="@friend.IconUrl" alt="@friend.Name's avatar" data-ref="@Elems[friend.Name]" />
+                    </td>
                     <td class="p-sm-2" title="@friend.Name"><span class="line-truncate-2 text-wrap-balance">@friend.Name</span></td>
                     <td>
                         <a class="link rounded px-sm-1 line-truncate-2 text-wrap-balance mx-auto mw-100"

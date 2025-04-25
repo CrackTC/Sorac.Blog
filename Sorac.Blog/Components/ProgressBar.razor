@@ -1,6 +1,6 @@
 @inject JSElementReferenceScope Ref
 
-<div class="mx-3">
+<div @attributes="InputAttributes">
     <div class="progress" role="progressbar" data-ref="@Ref["progress"]"
         style="height: 0.5em; background-color: var(--color-on-container); transition: height 0.3s ease-in-out;">
         <div class="progress-bar" data-ref="@Ref["progressBar"]"
@@ -14,4 +14,7 @@
     [Parameter]
     [EditorRequired]
     public JSElementReferenceScope For { get; set; } = null!;
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? InputAttributes { get; set; }
 }
